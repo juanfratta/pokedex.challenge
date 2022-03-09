@@ -1,7 +1,6 @@
 import { RefObject, useEffect } from 'react';
-import { FetchNextPageOptions } from 'react-query';
 
-export interface IntersectionObserverParams {
+export interface IntersectionInt {
   root?: any; //TODO: verify types this arg
   target: RefObject<HTMLDivElement>;
   onIntersect?: any; //TODO: verify types this arg
@@ -17,7 +16,7 @@ export default function useIntersectionObserver({
   threshold = 0.5,
   rootMargin = '0px',
   enabled = true,
-}: IntersectionObserverParams) {
+}: IntersectionInt) {
   useEffect(() => {
     if (!enabled) {
       return;

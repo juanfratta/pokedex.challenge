@@ -1,16 +1,15 @@
-import { FC, Fragment, useCallback, useRef } from 'react';
+import getConfig from 'next/config';
+import { FC, useRef } from 'react';
 
+import Skeleton from 'react-loading-skeleton';
 import { useInfiniteQuery } from 'react-query';
 import { v4 as uuidv4 } from 'uuid';
-import { fetchPokemons } from '../../../utils/api';
-import getConfig from 'next/config';
+import { fetchPokemons } from '@lib/api';
+import useIntersectionObserver, { IntersectionInt } from '@hooks/useIntersection';
+import { ServiceResponse } from '@typings/service.types';
 
-import PokeCard from '../../PokeCard/PokeCard';
-import useIntersectionObserver, {
-  IntersectionObserverParams,
-} from '../../../hooks/useIntersection';
-import { ServiceResponse } from '../../../typings/service.types';
 import { ListContainer } from './List.styled';
+import PokeCard from '@components/PokeCard';
 
 const {
   publicRuntimeConfig: { backUrl },
@@ -18,15 +17,16 @@ const {
 
 const List: FC<{}> = () => {
   //start fetching data section
-  const { data, status, fetchNextPage, hasNextPage } = useInfiniteQuery(
-    'getList',
-    async ({ pageParam = backUrl }) => {
-      return await fetchPokemons(pageParam);
-    },
-    {
-      getNextPageParam: (page) => page.next || false,
-    }
-  );
+  const { data, status, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteQuery(
+      'getList',
+      async ({ pageParam = backUrl }) => {
+        return await fetchPokemons(pageParam);
+      },
+      {
+        getNextPageParam: (page) => page.next || false,
+      }
+    );
   //end fetching data
 
   //start scroll control section
@@ -36,11 +36,21 @@ const List: FC<{}> = () => {
     target: loadMoreRef,
     onIntersect: fetchNextPage,
     enabled: !!hasNextPage,
-  } as IntersectionObserverParams);
+  } as IntersectionInt);
   //end scroll control
 
+  const gridItems = [1, 2, 3, 4, 5, 6];
+
   //start render section
-  if (status === ServiceResponse.LOADING) return <h1>is loading ...</h1>;
+  if (status === ServiceResponse.LOADING)
+    return (
+      <ListContainer>
+        {gridItems.map((item) => (
+          <Skeleton key={uuidv4()} height='100%' />
+        ))}
+      </ListContainer>
+    );
+
   if (status === ServiceResponse.FAILURE) return <h1> error ...</h1>;
 
   return (
@@ -53,11 +63,7 @@ const List: FC<{}> = () => {
         </ListContainer>
       ))}
 
-      {hasNextPage && (
-        <div ref={loadMoreRef}>
-          <h3>Load More...</h3>
-        </div>
-      )}
+      {hasNextPage && !isFetchingNextPage && <div ref={loadMoreRef} />}
     </div>
   );
 };

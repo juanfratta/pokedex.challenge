@@ -1,19 +1,15 @@
 import { FC } from 'react';
-import Details from '../Details';
-import Home from '../Home';
-import List from '../List';
+import { View } from '@typings/views.types';
 
-/* const ViewsFactory: FC<any> = (key: string) =>
-  ({ 'list': <List />, 'details': <Details /> })[key] || <Home />; */
+import Details from '../Details';
+import List from '../List';
 
 const ViewsFactory: FC<any> = ({ view }) => {
   switch (view) {
-    case 'list':
+    case View.LIST:
       return <List />;
-    case 'details':
+    case View.DETAILS:
       return <Details />;
-    case 'home':
-      return <Home />;
     default:
       return <></>;
   }
