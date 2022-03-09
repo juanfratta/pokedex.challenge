@@ -1,11 +1,9 @@
 import type { AppProps } from 'next/app';
-import { ServerStyleSheet } from 'styled-components';
 
 import '../styles/globals.css';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const sheet = new ServerStyleSheet();
-
   return <Component {...pageProps} />;
 }
 

@@ -13,3 +13,7 @@ export const getPokemon = async (url: string) => {
     .then((res) => res.data)
     .catch((error) => error);
 };
+
+export const getDetails = async (name: string) => {
+  //TODO: return description and details
+};

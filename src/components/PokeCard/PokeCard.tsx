@@ -21,16 +21,22 @@ import {
   TagPower,
   Title,
 } from './PokeCard.styled';
-import { FadeLoader } from 'react-spinners';
 
 const PokeCard: FC<PokeCardProps> = ({ name, url }) => {
-  const { data, error, isLoading } = useQuery(['getPokemon', url], () => getPokemon(url));
-  const { getView } = useContext(PokeContext);
+  const { data, error, isLoading } = useQuery(['getPokemon', url], () =>
+    getPokemon(url!)
+  );
+  const { getView, setPokemon } = useContext(PokeContext);
+
+  const typeColor = getTypeColor(data?.types[0]?.type.name);
+
+  const getDetails = (image: string) => {
+    setPokemon({ name, image });
+    getView(View.DETAILS);
+  };
 
   if (error) return <h1>Error ...</h1>;
   if (isLoading) return <Skeleton height='100%' />;
-
-  const typeColor = getTypeColor(data?.types[0]?.type.name);
 
   return (
     <CardContainer>
@@ -40,11 +46,15 @@ const PokeCard: FC<PokeCardProps> = ({ name, url }) => {
       <CardBottom>
         <TagPoweContainer>
           {data?.types.map((t: any) => (
-            <TagPower key={uuidv4()}>✔ {t.type.name}</TagPower>
+            <TagPower key={uuidv4()}>{t.type.name}</TagPower>
           ))}
         </TagPoweContainer>
         <ButtonContainer>
-          <Button onClick={() => getView(View.DETAILS)}>Details</Button>
+          <Button
+            onClick={() => getDetails(data.sprites?.other?.dream_world.front_default)}
+          >
+            Details
+          </Button>
         </ButtonContainer>
       </CardBottom>
       <ImageContainer>
