@@ -11,8 +11,6 @@ import { View } from '@typings/views.types';
 import Skeleton from 'react-loading-skeleton';
 
 import {
-  Button,
-  ButtonContainer,
   CardBottom,
   CardContainer,
   CardUpper,
@@ -49,15 +47,10 @@ const PokeCard: FC<PokeCardProps> = ({ name, url }) => {
             <TagPower key={uuidv4()}>{t.type.name}</TagPower>
           ))}
         </TagPoweContainer>
-        <ButtonContainer>
-          <Button
-            onClick={() => getDetails(data.sprites?.other?.dream_world.front_default)}
-          >
-            Details
-          </Button>
-        </ButtonContainer>
       </CardBottom>
-      <ImageContainer>
+      <ImageContainer
+        onClick={() => getDetails(data.sprites?.other?.dream_world.front_default)}
+      >
         <Image
           quality={100}
           src={data.sprites?.other?.dream_world.front_default}

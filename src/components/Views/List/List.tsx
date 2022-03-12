@@ -17,10 +17,11 @@ const {
 
 const List: FC<{}> = () => {
   //start fetching data section
+  const url = `${backUrl}/?limit=6&offset=0`;
   const { data, status, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery(
       'getList',
-      async ({ pageParam = backUrl }) => {
+      async ({ pageParam = url }) => {
         return await fetchPokemons(pageParam);
       },
       {
